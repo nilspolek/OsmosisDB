@@ -7,12 +7,3 @@ steps:
     commands:
       - make build
       - make test
-  - name: publish
-    image: plugins/github-release
-    settings:
-      api_key:
-        from_secret: gh-API-key
-      files: bin/*
-trigger:
-  event:
-    - tag
