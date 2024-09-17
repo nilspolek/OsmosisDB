@@ -17,6 +17,9 @@ jobs:
       uses: cachix/install-nix-action@v16
       with:
           nix_version: 'latest'
+    
+    - name: Set up Nixpkgs
+      run: nix-channel --add https://nixos.org/channels/nixos-23.05 nixpkgs && nix-channel --update
 
     - name: Build project
       run: nix-build
