@@ -24,6 +24,7 @@ steps:
       - make test
     depends_on:
       - fix
+
   - name: build
     image: lnl7/nix
     commands:
@@ -33,3 +34,4 @@ steps:
     depends_on:
       - cleanup
       - vet
+      - test
