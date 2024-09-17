@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> {}}:
 pkgs.mkShell {
-    packages = with pkgs; [
+    buildInputs = with pkgs; [
         git
         neovim
         tmux
