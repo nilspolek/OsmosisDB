@@ -8,6 +8,8 @@ pkgs.stdenv.mkDerivation {
   buildInputs = [ pkgs.go pkgs.gnumake ];
 
   buildPhase = ''
+    export GOCACHE=$(mktemp -d)
+
     # Build the Go project
     make build
   '';
