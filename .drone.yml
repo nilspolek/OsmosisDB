@@ -7,7 +7,7 @@ steps:
     commands:
       - make fix
       - make vet
-      - make lint
+      - make format
       - make clean
   - name: test
     image: golang

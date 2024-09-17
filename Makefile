@@ -7,14 +7,14 @@ build:
 test:
 	go test ./*.go
 
-lint:
+format:
 	gofmt -s -w .
 
 vet:
 	go vet ./*.go
 
 fix:
-	go fix ./*.go
+	go fix .
 
 clean:
 	rm -rf bin
