@@ -3,7 +3,7 @@ type: docker
 name: go test
 steps:
   - name: test
-    image: nixos/nix
+    image: lnl7/nix
     commands:
       - nix-channel --update
       - nix-shell --run "make test"
