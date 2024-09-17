@@ -8,13 +8,6 @@ pkgs.stdenv.mkDerivation {
   buildInputs = [ pkgs.go pkgs.gnumake ];
 
   buildPhase = ''
-    export GOCACHE=$(mktemp -d)
-
-    # Create a Go project directory in the build environment
-    mkdir -p $TMPDIR/src/github.com/nilspolek/osmosisdb
-    cp -r ./* $TMPDIR/src/github.com/nilspolek/osmosisdb
-    cd $TMPDIR/src/github.com/nilspolek/osmosisdb
-
     # Build the Go project
     make build
   '';
