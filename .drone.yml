@@ -3,7 +3,8 @@ type: docker
 name: go test
 steps:
   - name: test
-    image: golang:1.23.1
+    image: lnl7/nix
     commands:
-      - make build
-      - make test
+      - nix-channel --update
+      - nix-shell --run "make test"
+      - nix-build
