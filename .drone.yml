@@ -6,9 +6,12 @@ steps:
     image: golang
     commands:
       - make fix
-      - make vet
       - make format
       - make clean
+  - name: vet
+    image: golang
+    commands:
+      - make vet
   - name: test
     image: golang
     commands:
@@ -21,3 +24,4 @@ steps:
       - nix-build
     depends_on:
       - cleanup
+      - vet
