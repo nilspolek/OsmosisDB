@@ -5,7 +5,7 @@ pkgs.stdenv.mkDerivation {
 
   src = ./.;
 
-  buildInputs = [ pkgs.go_1_23 pkgs.gnumake ];
+  buildInputs = [ pkgs.go pkgs.gnumake ];
 
   buildPhase = ''
     export GOCACHE=$(mktemp -d)

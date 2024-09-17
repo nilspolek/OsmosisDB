@@ -9,7 +9,7 @@ pkgs.mkShell {
         tree
         curl
         wget
-        go_1_23
+        go
         gnumake
     ];
 }
