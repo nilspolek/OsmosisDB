@@ -2,9 +2,36 @@ kind: pipeline
 type: docker
 name: go test
 steps:
+  - name: fix
+    image: golang
+    commands:
+      - make fix
+
+  - name: cleanup
+    image: golang
+    commands:
+      - make format
+      - make clean
+
+  - name: vet
+    image: golang
+    commands:
+      - make vet
+
   - name: test
+    image: golang
+    commands:
+      - make test
+    depends_on:
+      - fix
+
+  - name: build
     image: lnl7/nix
     commands:
       - nix-channel --update
       - nix-shell --run "make test"
       - nix-build
+    depends_on:
+      - cleanup
+      - vet
+      - test
