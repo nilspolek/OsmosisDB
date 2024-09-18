@@ -11,5 +11,6 @@ pkgs.mkShell {
         wget
         go
         gnumake
+        inetutils # for telnet
     ];
 }
