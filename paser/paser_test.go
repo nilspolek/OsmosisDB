@@ -101,7 +101,7 @@ func TestUPT(t *testing.T) {
 }
 
 func TestERR(t *testing.T) {
-	input := "ERR\n"
+	input := "ERRServerFehler\n"
 	paser := NewPaser()
 	output, err := paser.Parse([]byte(input))
 	if err != nil {
@@ -109,6 +109,9 @@ func TestERR(t *testing.T) {
 	}
 	if output.Type != ERR {
 		t.Fatal("Expected Command: ERR")
+	}
+	if output.Keyword != "ServerFehler" {
+		t.Fatalf("Expected Keyword: ServerFehler, got %s", output.Keyword)
 	}
 }
 

@@ -51,7 +51,7 @@ func (p *Paser) Parse(data []byte) (Command, error) {
 		command, err = p.parseUpt(data)
 		break
 	case ERR:
-		command, err = Command{Type: ERR}, nil
+		command, err = p.parseErr(data)
 		break
 	case OK:
 		command, err = Command{Type: OK}, nil
@@ -63,6 +63,15 @@ func (p *Paser) Parse(data []byte) (Command, error) {
 	if err != nil {
 		return Command{}, err
 	}
+	return command, nil
+}
+
+func (p *Paser) parseErr(data []byte) (Command, error) {
+	var (
+		command Command
+	)
+	command.Type = ERR
+	command.Keyword = string(data[3 : len(data)-1])
 	return command, nil
 }
 
