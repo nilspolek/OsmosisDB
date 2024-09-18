@@ -5,7 +5,7 @@ build:
 	go build -o bin/osmosis ./main.go
 
 test:
-	go test ./*.go
+	go test ./*/*.go
 
 format:
 	gofmt -s -w .
