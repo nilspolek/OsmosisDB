@@ -28,6 +28,18 @@ const (
 	DELIMITER  = ";"
 )
 
+func NewCommand() *Command {
+	return &Command{}
+}
+
+func (c Command) Bytes() []byte {
+	return []byte(c.String())
+}
+
+func (c Command) String() string {
+	return c.Type + c.Keyword + string(c.DataType) + string(c.Data) + "\n"
+}
+
 func NewPaser() *Paser {
 	return &Paser{}
 }
@@ -84,8 +96,8 @@ func (p *Paser) parseUpt(data []byte) (Command, error) {
 	idx = bytes.Index(data, []byte(DELIMITER))
 	command.Type = UPT
 	command.Keyword = string(data[3:idx])
-	command.DataType = data[idx+2]
-	command.Data = data[idx+3 : len(data)-1]
+	command.DataType = data[idx+1]
+	command.Data = data[idx+2 : len(data)-1]
 	return command, nil
 }
 
@@ -106,8 +118,8 @@ func (p *Paser) parseSet(data []byte) (Command, error) {
 	idx = bytes.Index(data, []byte(DELIMITER))
 	command.Type = SET
 	command.Keyword = string(data[3:idx])
-	command.DataType = data[idx+2]
-	command.Data = data[idx+3 : len(data)-1]
+	command.DataType = data[idx+1]
+	command.Data = data[idx+2 : len(data)-1]
 	return command, nil
 }
 func (p *Paser) parseGet(data []byte) (Command, error) {
