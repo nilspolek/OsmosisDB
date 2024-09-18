@@ -25,6 +25,7 @@ const (
 	UPT        = "UPT"
 	ERR        = "ERR"
 	OK         = "OK "
+	DELIMITER  = ";"
 )
 
 func NewPaser() *Paser {
@@ -80,7 +81,7 @@ func (p *Paser) parseUpt(data []byte) (Command, error) {
 		command Command
 		idx     int
 	)
-	idx = bytes.Index(data, []byte("\r\n"))
+	idx = bytes.Index(data, []byte(DELIMITER))
 	command.Type = UPT
 	command.Keyword = string(data[3:idx])
 	command.DataType = data[idx+2]
@@ -102,7 +103,7 @@ func (p *Paser) parseSet(data []byte) (Command, error) {
 		command Command
 		idx     int
 	)
-	idx = bytes.Index(data, []byte("\r\n"))
+	idx = bytes.Index(data, []byte(DELIMITER))
 	command.Type = SET
 	command.Keyword = string(data[3:idx])
 	command.DataType = data[idx+2]

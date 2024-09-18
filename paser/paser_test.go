@@ -6,7 +6,7 @@ import (
 )
 
 func TestParse(t *testing.T) {
-	input := "SETNAME\r\n@NILS\n"
+	input := "SETNAME;@NILS\n"
 	paser := NewPaser()
 	output, err := paser.Parse([]byte(input))
 
@@ -22,7 +22,7 @@ func TestParse(t *testing.T) {
 		t.Fatal("Expected Command: SET")
 	}
 
-	input = "SkTNAME\r\n@NILS\n"
+	input = "SkTNAME;@NILS\n"
 	output, err = paser.Parse([]byte(input))
 
 	if err == nil {
@@ -76,7 +76,7 @@ func TestDEL(t *testing.T) {
 }
 
 func TestUPT(t *testing.T) {
-	input := "UPTNAME\r\n@NILS\n"
+	input := "UPTNAME;@NILS\n"
 	paser := NewPaser()
 	output, err := paser.Parse([]byte(input))
 
@@ -128,7 +128,7 @@ func TestOK(t *testing.T) {
 }
 
 func TestSET(t *testing.T) {
-	input := "SETNAME\r\n@NILS\n"
+	input := "SETNAME;@NILS\n"
 	paser := NewPaser()
 	output, err := paser.Parse([]byte(input))
 
