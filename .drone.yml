@@ -7,11 +7,10 @@ steps:
     commands:
       - make fix
 
-  - name: cleanup
+  - name: lint
     image: golang
     commands:
-      - make format
-      - make clean
+      - make lint
 
   - name: vet
     image: golang
@@ -26,12 +25,10 @@ steps:
       - fix
 
   - name: build
-    image: lnl7/nix
+    image: golang
     commands:
-      - nix-channel --update
-      - nix-shell --run "make test"
-      - nix-build
+      - make build
     depends_on:
-      - cleanup
+      - lint
       - vet
       - test

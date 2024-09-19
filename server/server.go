@@ -5,29 +5,38 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/nilspolek/OsmosisDB/database"
 	"github.com/nilspolek/OsmosisDB/paser"
 )
 
+// Server struct for the server that handles the connections
 type Server struct {
 	ln     net.Listener
-	config ServerConfig
-}
-type ServerConfig struct {
-	addr string
+	config Config
 }
 
-func NewServerConfig(addr string) ServerConfig {
-	return ServerConfig{
+// Config struct for the server configuration
+type Config struct {
+	addr string
+	db   database.Service
+}
+
+// NewConfig create a new server configuration
+func NewConfig(addr string, db *database.Service) Config {
+	return Config{
 		addr: addr,
+		db:   *db,
 	}
 }
 
-func NewServer(config ServerConfig) *Server {
+// NewServer create a new server
+func NewServer(config Config) *Server {
 	return &Server{
 		config: config,
 	}
 }
 
+// Start the server
 func (s *Server) Start() error {
 	ln, err := net.Listen("tcp", s.config.addr)
 	if err != nil {
@@ -40,17 +49,19 @@ func (s *Server) Start() error {
 			fmt.Println("Error accepting connection:", err)
 			continue
 		}
-		go handleConnection(conn)
+		go s.handleConnection(conn)
 	}
 }
 
+// Stop the server
 func (s *Server) Stop() error {
 	return s.ln.Close()
 }
 
-func handleConnection(conn net.Conn) {
+func (s *Server) handleConnection(conn net.Conn) {
 	var (
 		command paser.Command
+		result  []byte
 	)
 	defer conn.Close()
 	fmt.Println("Client connected:", conn.RemoteAddr())
@@ -64,11 +75,17 @@ func handleConnection(conn net.Conn) {
 			break
 		}
 		command, err = pser.Parse([]byte(clientInput))
+		result, err = s.config.db.Command(command)
 		if err != nil {
-			conn.Write(paser.Command{Type: paser.ERR, Keyword: err.Error()}.Bytes())
+			conn.Write(paser.Command{
+				Type:    paser.ERR,
+				Keyword: err.Error(),
+			}.Bytes())
 			continue
 		}
-
-		conn.Write([]byte([]byte(fmt.Sprintf("Command Type:\t%s\nCommand Keyword:\t%s\nCommand Datatype\t%v\nCommand Data\t%s\n", command.Type, command.Keyword, string(command.DataType), string(command.Data)))))
+		conn.Write(paser.Command{
+			Type:    paser.OK,
+			Keyword: string(result),
+		}.Bytes())
 	}
 }

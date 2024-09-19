@@ -5,8 +5,10 @@ import (
 	"errors"
 )
 
+// Paser struct
 type Paser struct{}
 
+// Command struct
 type Command struct {
 	Type     string
 	Keyword  string
@@ -15,35 +17,51 @@ type Command struct {
 }
 
 const (
-	TYPEINT    = '!'
+	// TYPEINT = int used for the data type of the command
+	TYPEINT = '!'
+	// TYPESTRING = string used for the data type of the command
 	TYPESTRING = '@'
-	TYPEBOOL   = '#'
-	TYPEFLOAT  = '$'
-	SET        = "SET"
-	GET        = "GET"
-	DEL        = "DEL"
-	UPT        = "UPT"
-	ERR        = "ERR"
-	OK         = "OK "
-	DELIMITER  = ";"
+	// TYPEBOOL = bool used for the data type of the command
+	TYPEBOOL = '#'
+	// TYPEFLOAT = float64 used for the data type of the command
+	TYPEFLOAT = '$'
+	// SET = set command type
+	SET = "SET"
+	// GET = get command type
+	GET = "GET"
+	// DEL = delete command type
+	DEL = "DEL"
+	// UPT = update command type
+	UPT = "UPT"
+	// ERR = error command type
+	ERR = "ERR"
+	// OK = ok command type
+	OK = "OK "
+	// DELIMITER = is the delimiter for the data
+	DELIMITER = ";"
 )
 
+// NewCommand create a new command
 func NewCommand() *Command {
 	return &Command{}
 }
 
+// Bytes return the command as a byte array
 func (c Command) Bytes() []byte {
 	return []byte(c.String())
 }
 
+// String return the command as a string
 func (c Command) String() string {
 	return c.Type + c.Keyword + string(c.DataType) + string(c.Data) + "\n"
 }
 
+// NewPaser create a new paser
 func NewPaser() *Paser {
 	return &Paser{}
 }
 
+// Parse the input data to a Command
 func (p *Paser) Parse(data []byte) (Command, error) {
 	// Parse the input
 	var (
