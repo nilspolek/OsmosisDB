@@ -29,6 +29,6 @@ steps:
     commands:
       - make build
     depends_on:
-      - cleanup
+      - lint
       - vet
       - test
