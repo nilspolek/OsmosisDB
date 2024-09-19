@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/nilspolek/OsmosisDB/database"
 	"github.com/nilspolek/OsmosisDB/paser"
 )
 
@@ -14,11 +15,13 @@ type Server struct {
 }
 type ServerConfig struct {
 	addr string
+	db   database.DatabaseService
 }
 
-func NewServerConfig(addr string) ServerConfig {
+func NewServerConfig(addr string, db *database.DatabaseService) ServerConfig {
 	return ServerConfig{
 		addr: addr,
+		db:   *db,
 	}
 }
 
@@ -40,7 +43,7 @@ func (s *Server) Start() error {
 			fmt.Println("Error accepting connection:", err)
 			continue
 		}
-		go handleConnection(conn)
+		go s.handleConnection(conn)
 	}
 }
 
@@ -48,9 +51,10 @@ func (s *Server) Stop() error {
 	return s.ln.Close()
 }
 
-func handleConnection(conn net.Conn) {
+func (s *Server) handleConnection(conn net.Conn) {
 	var (
 		command paser.Command
+		result  []byte
 	)
 	defer conn.Close()
 	fmt.Println("Client connected:", conn.RemoteAddr())
@@ -64,11 +68,18 @@ func handleConnection(conn net.Conn) {
 			break
 		}
 		command, err = pser.Parse([]byte(clientInput))
+		result, err = s.config.db.Command(command)
 		if err != nil {
-			conn.Write(paser.Command{Type: paser.ERR, Keyword: err.Error()}.Bytes())
+			conn.Write(paser.Command{
+				Type:     paser.ERR,
+				Keyword:  err.Error(),
+
+			}.Bytes())
 			continue
 		}
-
-		conn.Write([]byte([]byte(fmt.Sprintf("Command Type:\t%s\nCommand Keyword:\t%s\nCommand Datatype\t%v\nCommand Data\t%s\n", command.Type, command.Keyword, string(command.DataType), string(command.Data)))))
+		conn.Write(paser.Command{
+			Type:     paser.OK,
+			Keyword:  string(result),
+		}.Bytes())
 	}
 }
