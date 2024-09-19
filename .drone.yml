@@ -26,11 +26,9 @@ steps:
       - fix
 
   - name: build
-    image: lnl7/nix
+    image: golang
     commands:
-      - nix-channel --update
-      - nix-shell --run "make test"
-      - nix-build
+      - build
     depends_on:
       - cleanup
       - vet
