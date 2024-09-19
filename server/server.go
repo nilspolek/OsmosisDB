@@ -55,6 +55,7 @@ func (s *Server) Start() error {
 
 // Stop the server
 func (s *Server) Stop() error {
+	s.config.db.Close()
 	return s.ln.Close()
 }
 
@@ -65,7 +66,6 @@ func (s *Server) handleConnection(conn net.Conn) {
 	)
 	defer conn.Close()
 	fmt.Println("Client connected:", conn.RemoteAddr())
-	conn.Write([]byte("OK \n"))
 	buffer := bufio.NewReader(conn)
 	pser := paser.NewPaser()
 	for {

@@ -53,7 +53,10 @@ func (c Command) Bytes() []byte {
 
 // String return the command as a string
 func (c Command) String() string {
-	return c.Type + c.Keyword + string(c.DataType) + string(c.Data) + "\n"
+	if c.Type == SET || c.Type == UPT {
+		return c.Type + c.Keyword + DELIMITER + string(c.DataType) + string(c.Data) + "\n"
+	}
+	return c.Type + c.Keyword + string(c.Data) + "\n"
 }
 
 // NewPaser create a new paser
@@ -85,7 +88,7 @@ func (p *Paser) Parse(data []byte) (Command, error) {
 		command, err = p.parseErr(data)
 		break
 	case OK:
-		command, err = Command{Type: OK}, nil
+		command, err = p.parseOk(data)
 		break
 	default:
 		err = errors.New("Command type not found")
@@ -94,6 +97,15 @@ func (p *Paser) Parse(data []byte) (Command, error) {
 	if err != nil {
 		return Command{}, err
 	}
+	return command, nil
+}
+
+func (p *Paser) parseOk(data []byte) (Command, error) {
+	var (
+		command Command
+	)
+	command.Type = OK
+	command.Keyword = string(data[3 : len(data)-1])
 	return command, nil
 }
 

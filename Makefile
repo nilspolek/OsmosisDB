@@ -7,6 +7,7 @@ build:
 test:
 	go test ./paser
 	go test ./database
+	go test ./client
 
 lint:
 	go install golang.org/x/lint/golint@latest

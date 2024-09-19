@@ -67,11 +67,10 @@ func (d *Service) Command(command paser.Command) ([]byte, error) {
 
 // Get returns the value for a key or an error if the key does not exist
 func (d *Service) Get(key string) ([]byte, error) {
-	if d.data[key[:len(key)-1]] == nil {
+	if d.data[key] == nil {
 		return nil, fmt.Errorf("key [%s] not found", key)
 	}
-
-	return d.data[key[:len(key)-1]], nil
+	return d.data[key], nil
 }
 
 // Set sets the value for a key or returns an error if the key already exists

@@ -31,6 +31,18 @@ func TestParse(t *testing.T) {
 
 }
 
+func TestABC(t *testing.T) {
+	input := "OK test\n"
+	pser := NewPaser()
+	output, err := pser.Parse([]byte(input))
+	if err != nil {
+		t.Fatal("Expected no error")
+	}
+	if output.Keyword != "test" {
+		t.Fatalf("Expected test, got %s", output.Keyword)
+	}
+}
+
 func TestGET(t *testing.T) {
 	input := "GETNAME\n"
 	paser := NewPaser()
