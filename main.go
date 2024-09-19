@@ -16,7 +16,7 @@ func main() {
 		os.Exit(1)
 	}
 	defer db.Close()
-	server := server.NewServer(server.NewServerConfig(":8080", db))
+	server := server.NewServer(server.NewConfig(":8080", db))
 	server.Start()
 	defer server.Stop()
 }
