@@ -10,24 +10,25 @@ import (
 	"github.com/nilspolek/OsmosisDB/paser"
 )
 
-type DatabaseService struct {
+// Service is a simple key-value store
+type Service struct {
 	dbFileName string
 	data       map[string][]byte
 }
 
-func NewDatabaseService(filename string) (*DatabaseService, error) {
-
+// NewService creates a new database service
+func NewService(filename string) (*Service, error) {
 	data, err := loadMapFromFile(filename)
 	if err != nil {
 		data = make(map[string][]byte)
 	}
-	db := DatabaseService{
+	db := Service{
 		dbFileName: filename,
 		data:       data,
 	}
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-	go func(db *DatabaseService) {
+	go func(db *Service) {
 		for sig := range c {
 			if sig == os.Interrupt {
 				db.Close()
@@ -43,7 +44,8 @@ func NewDatabaseService(filename string) (*DatabaseService, error) {
 	return &db, nil
 }
 
-func (d *DatabaseService) Command(command paser.Command) ([]byte, error) {
+// Command executes a command on the database
+func (d *Service) Command(command paser.Command) ([]byte, error) {
 	var (
 		result []byte
 		err    error
@@ -63,29 +65,33 @@ func (d *DatabaseService) Command(command paser.Command) ([]byte, error) {
 	return result, err
 }
 
-func (d *DatabaseService) Get(key string) ([]byte, error) {
+// Get returns the value for a key or an error if the key does not exist
+func (d *Service) Get(key string) ([]byte, error) {
 	if d.data[key[:len(key)-1]] == nil {
-		return nil, errors.New(fmt.Sprintf("key [%s] not found", key))
+		return nil, fmt.Errorf("key [%s] not found", key)
 	}
 
 	return d.data[key[:len(key)-1]], nil
 }
 
-func (d *DatabaseService) Set(key string, value []byte) error {
+// Set sets the value for a key or returns an error if the key already exists
+func (d *Service) Set(key string, value []byte) error {
 	if d.data[key] == nil {
 		d.data[key] = value
 		return nil
 	}
-	return errors.New(fmt.Sprintf("key already exists %s", key))
+	return fmt.Errorf("key already exists %s", key)
 }
 
-func (d *DatabaseService) Delete(key string) {
+// Delete deletes a key from the database
+func (d *Service) Delete(key string) {
 	delete(d.data, key)
 }
 
-func (d *DatabaseService) Update(key string, value []byte) error {
+// Update updates the value for a key or returns an error if the key does not exist
+func (d *Service) Update(key string, value []byte) error {
 	if _, ok := d.data[key]; !ok {
-		return errors.New(fmt.Sprintf("key [%s] not found", key))
+		return fmt.Errorf("key [%s] not found", key)
 	}
 	d.data[key] = value
 	return nil
@@ -131,6 +137,7 @@ func loadMapFromFile(filename string) (map[string][]byte, error) {
 	return data, nil
 }
 
-func (d *DatabaseService) Close() error {
+// Close saves the database to a file
+func (d *Service) Close() error {
 	return saveMapToFile(d.data, d.dbFileName)
 }

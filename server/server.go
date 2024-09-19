@@ -9,28 +9,34 @@ import (
 	"github.com/nilspolek/OsmosisDB/paser"
 )
 
+// Server struct for the server that handles the connections
 type Server struct {
 	ln     net.Listener
-	config ServerConfig
-}
-type ServerConfig struct {
-	addr string
-	db   database.DatabaseService
+	config Config
 }
 
-func NewServerConfig(addr string, db *database.DatabaseService) ServerConfig {
-	return ServerConfig{
+// Config struct for the server configuration
+type Config struct {
+	addr string
+	db   database.Service
+}
+
+// NewConfig create a new server configuration
+func NewConfig(addr string, db *database.Service) Config {
+	return Config{
 		addr: addr,
 		db:   *db,
 	}
 }
 
-func NewServer(config ServerConfig) *Server {
+// NewServer create a new server
+func NewServer(config Config) *Server {
 	return &Server{
 		config: config,
 	}
 }
 
+// Start the server
 func (s *Server) Start() error {
 	ln, err := net.Listen("tcp", s.config.addr)
 	if err != nil {
@@ -47,6 +53,7 @@ func (s *Server) Start() error {
 	}
 }
 
+// Stop the server
 func (s *Server) Stop() error {
 	return s.ln.Close()
 }
@@ -71,15 +78,14 @@ func (s *Server) handleConnection(conn net.Conn) {
 		result, err = s.config.db.Command(command)
 		if err != nil {
 			conn.Write(paser.Command{
-				Type:     paser.ERR,
-				Keyword:  err.Error(),
-
+				Type:    paser.ERR,
+				Keyword: err.Error(),
 			}.Bytes())
 			continue
 		}
 		conn.Write(paser.Command{
-			Type:     paser.OK,
-			Keyword:  string(result),
+			Type:    paser.OK,
+			Keyword: string(result),
 		}.Bytes())
 	}
 }

@@ -1,3 +1,4 @@
+// It Starts the server with the database at db.json and port 8080
 package main
 
 import (
@@ -9,7 +10,7 @@ import (
 )
 
 func main() {
-	db, err := database.NewDatabaseService("db.json")
+	db, err := database.NewService("db.json")
 	if err != nil {
 		goLog.Error(err.Error())
 		os.Exit(1)

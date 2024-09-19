@@ -8,8 +8,10 @@ test:
 	go test ./paser
 	go test ./database
 
-format:
-	gofmt -s -w .
+lint:
+	go install golang.org/x/lint/golint@latest
+	golint -set_exit_status ./...
+
 
 vet:
 	go vet ./*.go
