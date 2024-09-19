@@ -7,11 +7,10 @@ steps:
     commands:
       - make fix
 
-  - name: cleanup
+  - name: lint
     image: golang
     commands:
-      - make format
-      - make clean
+      - make lint
 
   - name: vet
     image: golang
