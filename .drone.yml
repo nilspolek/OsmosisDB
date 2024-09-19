@@ -28,7 +28,7 @@ steps:
   - name: build
     image: golang
     commands:
-      - build
+      - make build
     depends_on:
       - cleanup
       - vet
