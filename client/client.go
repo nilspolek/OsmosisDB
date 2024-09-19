@@ -8,10 +8,12 @@ import (
 	"github.com/nilspolek/OsmosisDB/paser"
 )
 
+// OsmosisDB is a client for the OsmosisDB
 type OsmosisDB struct {
 	conn net.Conn
 }
 
+// NewOsmosisDB creates a new OsmosisDB client
 func NewOsmosisDB(Address string) (*OsmosisDB, error) {
 	conn, err := net.Dial("tcp", Address)
 	if err != nil {
@@ -20,6 +22,7 @@ func NewOsmosisDB(Address string) (*OsmosisDB, error) {
 	return &OsmosisDB{conn}, nil
 }
 
+// Set a key-value pair in the database
 func (o *OsmosisDB) Set(Key string, Value []byte, dataType byte) error {
 	command := paser.Command{
 		Type:     paser.SET,
@@ -44,6 +47,7 @@ func (o *OsmosisDB) Set(Key string, Value []byte, dataType byte) error {
 	return nil
 }
 
+// Get a value from the database
 func (o *OsmosisDB) Get(Key string) ([]byte, error) {
 	command := paser.Command{
 		Type:    paser.GET,
@@ -63,6 +67,7 @@ func (o *OsmosisDB) Get(Key string) ([]byte, error) {
 	return []byte(responseCommand.Keyword), err
 }
 
+// Delete a key-value pair from the database
 func (o *OsmosisDB) Delete(Key string) error {
 	command := paser.Command{
 		Type:    paser.DEL,
@@ -82,6 +87,7 @@ func (o *OsmosisDB) Delete(Key string) error {
 	return nil
 }
 
+// Update a key-value pair in the database
 func (o *OsmosisDB) Update(Key string, Value []byte, dataType byte) error {
 	command := paser.Command{
 		Type:     paser.UPT,
@@ -103,6 +109,7 @@ func (o *OsmosisDB) Update(Key string, Value []byte, dataType byte) error {
 	return nil
 }
 
+// Close the connection to the database
 func (o *OsmosisDB) Close() error {
 	return o.conn.Close()
 }

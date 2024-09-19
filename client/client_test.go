@@ -32,7 +32,7 @@ func TestMain(t *testing.T) {
 func TestSet(t *testing.T) {
 	client, _ := NewOsmosisDB("localhost:8080")
 	defer client.Close()
-	err := client.Update("test", []byte("test123"), byte('@'))
+	err := client.Set("test", []byte("test123"), byte('@'))
 	if err != nil {
 		t.Fatal(err)
 	}
