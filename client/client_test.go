@@ -15,7 +15,7 @@ var (
 )
 
 // Sets up the env for the tests
-func TestMain(t *testing.T) {
+func TestMain(m *testing.M) {
 	go func() {
 		db, err = database.NewService("db.json")
 		if err != nil {

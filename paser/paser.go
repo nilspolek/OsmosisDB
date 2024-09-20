@@ -25,6 +25,9 @@ const (
 	TYPEBOOL = '#'
 	// TYPEFLOAT = float64 used for the data type of the command
 	TYPEFLOAT = '$'
+	// TYPEBYTE = byte used for the data type of the command
+	TYPEBYTE = '%'
+
 	// SET = set command type
 	SET = "SET"
 	// GET = get command type

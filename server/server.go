@@ -83,6 +83,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 			}.Bytes())
 			continue
 		}
+
 		conn.Write(paser.Command{
 			Type:    paser.OK,
 			Keyword: string(result),
